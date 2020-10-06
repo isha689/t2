@@ -1,0 +1,71 @@
+#include <iostream>
+using namespace std;
+class DisjSet {
+    int *rank, *parent, n;
+
+public:
+        DisjSet(int n)
+    {
+        rank = new int[n];
+        parent = new int[n];
+        this->n = n;
+        createSet();
+    }
+
+      void createSet()
+    {
+        for (int i = 0; i < n; i++) {
+            parent[i] = i;
+        }
+    }
+
+      int findSet(int x)
+    {
+                if (parent[x] != x) {
+
+                       parent[x] = findSet(parent[x]);
+
+                }
+
+        return parent[x];
+    }
+
+       void mergeSets(int x, int y)
+    {
+               int xset = findSet(x);
+        int yset = findSet(y);
+
+               if (xset == yset)
+            return;
+
+                if (rank[xset] < rank[yset]) {
+            parent[xset] = yset;
+        }
+        else if (rank[xset] > rank[yset]) {
+            parent[yset] = xset;
+        }
+
+                else {
+            parent[yset] = xset;
+            rank[xset] = rank[xset] + 1;
+        }
+    }
+};
+
+int main()
+{
+    DisjSet obj(5);
+    obj.mergeSets(0, 2);
+    obj.mergeSets(4, 2);
+    obj.mergeSets(3, 1);
+    if (obj.findSet(4) == obj.findSet(0))
+        cout << "Yes\n";
+    else
+        cout << "No\n";
+    if (obj.findSet(1) == obj.findSet(0))
+        cout << "Yes\n";
+    else
+        cout << "No\n";
+
+    return 0;
+}
